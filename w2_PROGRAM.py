@@ -1,8 +1,12 @@
 def set_subjects(file_name):
-    file = open(file_name)
-    subjects = file.read().splitlines()
-    file.close()
-    return subjects
+    try:
+        file = open(file_name)
+        subjects = file.read().splitlines()
+        file.close()
+        return subjects
+    except FileNotFoundError:
+        return None
+
 
 def save(subjects, file_name):
     file = open(file_name, 'w')
@@ -42,7 +46,10 @@ while True:
     in_command = check_command(cmd_arg)
     if in_command == 'open':
         subjects = set_subjects(cmd_arg[1])
-        file_name = cmd_arg[1]
+        if subjects:
+            file_name = cmd_arg[1]
+        else:
+            file_name = None
     elif in_command == 'save' and file_name:
         save(subjects, file_name)
     elif in_command == 'insert' and subjects:
