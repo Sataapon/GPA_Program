@@ -7,6 +7,9 @@ def set_subjects(file_name):
     except FileNotFoundError:
         return None
 
+def show_subjects(subjects):
+    for i in subjects:
+        print(i)
 
 def save(subjects, file_name):
     file = open(file_name, 'w')
@@ -29,6 +32,8 @@ def check_command(cmd_arg):
         return 'insert'
     elif cmd_arg[0] == 'edit' and len(cmd_arg) == 3:
         return 'edit'
+    elif cmd_arg[0] == 'show'  and len(cmd_arg) == 1:
+        return 'show'
     elif cmd_arg[0] == 'save' and len(cmd_arg) == 1:
         return 'save'
     elif cmd_arg[0] == 'exit' and len(cmd_arg) == 1:
@@ -50,11 +55,13 @@ while True:
             file_name = cmd_arg[1]
         else:
             file_name = None
-    elif in_command == 'save' and file_name:
-        save(subjects, file_name)
     elif in_command == 'insert' and subjects:
         insert(subjects, cmd_arg[1])
     elif in_command == 'edit' and subjects:
         edit(subjects, cmd_arg[1], cmd_arg[2])
+    elif in_command == 'show' and subjects:
+        show_subjects(subjects)
+    elif in_command == 'save' and file_name:
+        save(subjects, file_name)
     elif in_command == 'exit':
         break
