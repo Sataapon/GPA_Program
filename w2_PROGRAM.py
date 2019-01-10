@@ -30,9 +30,9 @@ def check_command(cmd_arg):
     elif cmd_arg[0] == 'exit' and len(cmd_arg) == 1:
         return 'exit'
 
+#--------------------------------------------------#
 
 subjects_studied = None
-open_file = False
 file_name = None
 
 while True:
@@ -42,13 +42,12 @@ while True:
     in_command = check_command(cmd_arg)
     if in_command == 'open':
         subjects_studied = get_subjects(cmd_arg[1])
-        open_file = True
         file_name = cmd_arg[1]
-    elif in_command == 'save' and open_file:
+    elif in_command == 'save' and file_name:
         save(subjects_studied, file_name)
-    elif in_command == 'insert' and open_file:
+    elif in_command == 'insert' and subjects_studied:
         insert(subjects_studied, cmd_arg[1])
-    elif in_command == 'edit' and open_file:
+    elif in_command == 'edit' and subjects_studied:
         edit(subjects_studied, cmd_arg[1], cmd_arg[2])
     elif in_command == 'exit':
         break
