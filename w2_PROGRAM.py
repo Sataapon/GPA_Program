@@ -1,3 +1,5 @@
+import re
+
 def set_subjects(file_name):
     try:
         file = open(file_name)
@@ -6,6 +8,11 @@ def set_subjects(file_name):
         return subjects
     except FileNotFoundError:
         return None
+
+def valid_subject(subject):
+    subject_pattern = re.compile(r'0\d{8},[A-Z](([A-Z]| ){1,28}[A-Z]|[A]?),[1-3],([A-D][+]?|F)') #BUG when space in subject name
+    print(subject)
+    return re.fullmatch(subject_pattern, subject)
 
 def insert(subjects, subject_new):
     subjects.append(subject_new)
@@ -78,9 +85,11 @@ while True:
         else:
             file_name = None
     elif in_command == 'insert' and subjects:
-        insert(subjects, cmd_arg[1])
+        if valid_subject(cmd_arg[1]):
+            insert(subjects, cmd_arg[1])
     elif in_command == 'edit' and subjects:
-        edit(subjects, cmd_arg[1], cmd_arg[2])
+        if valid_subject(cmd_arg[1]) and valid_subject(cmd_arg[2]):
+            edit(subjects, cmd_arg[1], cmd_arg[2])
     elif in_command == 'delete' and subjects:
         delete(subjects, cmd_arg[1])
     elif in_command == 'save' and file_name:
