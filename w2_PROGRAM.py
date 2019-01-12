@@ -7,6 +7,23 @@ def set_subjects(file_name):
     except FileNotFoundError:
         return None
 
+def insert(subjects, subject_new):
+    subjects.append(subject_new)
+
+def edit(subjects, subject_old, subject_new):
+    for i in range(len(subjects)):
+        if subjects[i] == subject_old:
+            subjects[i]= subject_new
+
+def delete(subjects, subject):
+    subjects.remove(subject)
+
+def save(subjects, file_name):
+    file = open(file_name, 'w')
+    for item in subjects:
+        file.write(f'{item}\n')
+    file.close
+
 def show_subjects(subjects):
     for i in subjects:
         print(i)
@@ -32,20 +49,6 @@ def calculate_GPA(subjects):
 def show_GPA(gpa):
     print(f'GPA = {gpa}')
 
-def save(subjects, file_name):
-    file = open(file_name, 'w')
-    for item in subjects:
-        file.write(f'{item}\n')
-    file.close
-
-def insert(subjects, new):
-    subjects.append(new)
-
-def edit(subjects, old, new):
-    for i in range(len(subjects)):
-        if subjects[i] == old:
-            subjects[i]= new
-
 def check_command(cmd_arg):
     if cmd_arg[0] == 'open' and len(cmd_arg) == 2:
         return 'open'
@@ -53,12 +56,14 @@ def check_command(cmd_arg):
         return 'insert'
     elif cmd_arg[0] == 'edit' and len(cmd_arg) == 3:
         return 'edit'
-    elif cmd_arg[0] == 'show'  and len(cmd_arg) == 1:
-        return 'show'
-    elif cmd_arg[0] == 'calculate' and len(cmd_arg) == 1:
-        return 'calculate'
+    elif cmd_arg[0] == 'delete' and len(cmd_arg) == 2:
+        return 'delete'
     elif cmd_arg[0] == 'save' and len(cmd_arg) == 1:
         return 'save'
+    elif cmd_arg[0] == 'show' and len(cmd_arg) == 1:
+        return 'show'
+    elif cmd_arg[0] == 'gpa' and len(cmd_arg) == 1:
+        return 'gpa'
     elif cmd_arg[0] == 'exit' and len(cmd_arg) == 1:
         return 'exit'
 
@@ -82,12 +87,13 @@ while True:
         insert(subjects, cmd_arg[1])
     elif in_command == 'edit' and subjects:
         edit(subjects, cmd_arg[1], cmd_arg[2])
-    elif in_command == 'show' and subjects:
-        show_subjects(subjects)
-    elif in_command == 'calculate' and subjects:
-        gpa = calculate_GPA(subjects)
-        show_GPA(gpa)
+    elif in_command == 'delete' and subjects:
+        delete(subjects, cmd_arg[1])
     elif in_command == 'save' and file_name:
         save(subjects, file_name)
+    elif in_command == 'show' and subjects:
+        show_subjects(subjects)
+    elif in_command == 'gpa' and subjects:
+        show_GPA(calculate_GPA(subjects))
     elif in_command == 'exit':
         break
