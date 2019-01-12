@@ -28,15 +28,9 @@ def show_subjects(subjects):
     for i in subjects:
         print(i)
 
-def convert_grade(value):
-    if value == 'A': return 4
-    elif value == 'B+': return 3.5
-    elif value == 'B': return 3
-    elif value == 'C+': return 2.5
-    elif value == 'C': return 2
-    elif value == 'D+': return 1.5
-    elif value == 'D': return 1
-    else: return 0
+def convert_grade(grade):
+    grades = {'A': 4, 'B+' : 3.5, 'B': 3, 'C+': 2.5, 'C': 2, 'D+': 1.5, 'D': 1, 'F': 0}
+    return grades[grade]
 
 def calculate_GPA(subjects):
     sum_weight, sum = 0, 0
