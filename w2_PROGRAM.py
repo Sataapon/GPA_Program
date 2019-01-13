@@ -35,11 +35,11 @@ def set_subjects(file_name):
 
 #--------------------------------------------------#
 
-def have_subject(subjects, subject):
-    for i in subjects:
-        if i.code == subject.code:
+def have_subject(subjects, in_subject):
+    for subject in subjects:
+        if subject.code == in_subject.code:
             return True
-        elif i.name == subject.name:
+        elif subject.name == in_subject.name:
             return True
     return False
 
@@ -81,8 +81,8 @@ def save_subjects(subjects, file_name):
 #--------------------------------------------------#
 
 def show_subjects(subjects):
-    for i in subjects:
-        print(i.code + ', ' + i.name + ', ' + i.weight + ', ' + i.grade)
+    for subject in subjects:
+        print(subject.code + ', ' + subject.name + ', ' + subject.weight + ', ' + subject.grade)
 
 #--------------------------------------------------#
 
@@ -94,9 +94,9 @@ def convert_grade(grade):
 
 def calculate_GPA(subjects):
     sum_weight, sum = 0, 0
-    for i in subjects:
-        sum_weight += int(i.weight)
-        sum += int(i.weight) * convert_grade(i.grade)
+    for subject in subjects:
+        sum_weight += int(subject.weight)
+        sum += int(subject.weight) * convert_grade(subject.grade)
     return sum / sum_weight
 
 #--------------------------------------------------#
@@ -126,19 +126,23 @@ def check_command(cmd_arg):
 
 #--------------------------------------------------#
 
-"""
 def split_input(cmd):
     cmd_arg = []
-    i = 0
+    quote = False
     cmd_arg.append('')
-    for arg in cmd:
-        if arg == ' ':
-            cmd_arg.append('')
-            i += 1
+    arg_index = 0
+    for i in range(len(cmd)):
+        if cmd[i] == "'":
+            quote = not quote
+        elif cmd[i] == ' ':
+            if quote:
+                cmd_arg[arg_index] += cmd[i]
+            else:
+                cmd_arg.append('')
+                arg_index += 1
         else:
-            cmd_arg[i] += arg
+            cmd_arg[arg_index] += cmd[i]
     return cmd_arg
-"""
 
 #--------------------------------------------------#
 
@@ -147,7 +151,7 @@ file_name = None
 
 while True:
     cmd = input('Enter: ')
-    cmd_arg = cmd.split(' ') # BUG when space in subject name
+    cmd_arg = split_input(cmd)
 
     in_command = check_command(cmd_arg)
     if in_command == 'open':
