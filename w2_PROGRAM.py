@@ -7,17 +7,36 @@ class Subject():
         self.weight = weight
         self.grade = grade
 
+    def __eq__(self, other):
+        return self.code == other.code and self.name == other.name and \
+            self.weight == other.weight and self.grade == other.grade
+
+def create_subject(in_subject):
+    subject = in_subject.split(',')
+    return Subject(subject[0], subject[1], subject[2], subject[3])
+
 def set_subjects(file_name):
     try:
         file = open(file_name)
-        subjects = file.read().splitlines()
+        lines = file.read().splitlines()
         file.close()
+        subjects = []
+        for i in lines:
+            subjects.append(create_subject(i))
         return subjects
     except FileNotFoundError:
         return None
 
+def have_subject(subjects, subject):
+    for i in subjects:
+        if i.code == subject.code:
+            return True
+        elif i.name == subject.name:
+            return True
+    return False
+
 def valid_subject(subject):
-    subject_pattern = re.compile(r'0\d{8},[A-Z](([A-Z]| ){1,28}[A-Z]|[A-Z]?),[1-3],([A-D][+]?|F)')
+    subject_pattern = re.compile(r'0\d{8},[A-Z](([A-Z]| ){1,28}[A-Z]|[A-Z]?),[1-3],([A-D][+]?|F)') #BUG when space in subject name
     return re.fullmatch(subject_pattern, subject)
 
 def insert(subjects, subject_new):
@@ -26,10 +45,14 @@ def insert(subjects, subject_new):
 def edit(subjects, subject_old, subject_new):
     for i in range(len(subjects)):
         if subjects[i] == subject_old:
-            subjects[i]= subject_new
+            subjects[i] = subject_new
+            return
 
-def delete(subjects, subject):
-    subjects.remove(subject)
+def delete(subjects, subject_old):
+    for i in range(len(subjects)):
+        if subjects[i] == subject_old:
+            subjects.remove(subjects[i])
+            return
 
 def save(subjects, file_name):
     file = open(file_name, 'w')
@@ -39,7 +62,8 @@ def save(subjects, file_name):
 
 def show_subjects(subjects):
     for i in subjects:
-        print(i)
+        print(i.code + ', ' + i.name + ', ' + i.weight + ', ' + i.grade)
+
 
 def convert_grade(grade):
     grades = {'A': 4, 'B+' : 3.5, 'B': 3, 'C+': 2.5, 'C': 2, 'D+': 1.5, 'D': 1, 'F': 0}
@@ -48,13 +72,13 @@ def convert_grade(grade):
 def calculate_GPA(subjects):
     sum_weight, sum = 0, 0
     for i in subjects:
-        subject = i.split(',')
-        sum_weight += int(subject[2])
-        sum += int(subject[2]) * convert_grade(subject[3])
+        sum_weight += int(i.weight)
+        sum += int(i.weight) * convert_grade(i.grade)
     return sum / sum_weight
 
 def show_GPA(gpa):
     print(f'GPA = {gpa}')
+
 
 def check_command(cmd_arg):
     if cmd_arg[0] == 'open' and len(cmd_arg) == 2:
@@ -91,13 +115,18 @@ while True:
         else:
             file_name = None
     elif in_command == 'insert' and subjects:
-        if valid_subject(cmd_arg[1]): #BUG when space in subject name
-            insert(subjects, cmd_arg[1])
+        if valid_subject(cmd_arg[1]):
+            if not have_subject(subjects, create_subject(cmd_arg[1])):
+                insert(subjects, create_subject(cmd_arg[1]))
     elif in_command == 'edit' and subjects:
-        if valid_subject(cmd_arg[1]) and valid_subject(cmd_arg[2]): #BUG when space in subject name
-            edit(subjects, cmd_arg[1], cmd_arg[2])
+        if valid_subject(cmd_arg[1]) and valid_subject(cmd_arg[2]):
+            temp_subjects = subjects[:]
+            delete(temp_subjects, create_subject(cmd_arg[1]))
+            if not have_subject(temp_subjects, create_subject(cmd_arg[2])):
+                edit(subjects, create_subject(cmd_arg[1]), create_subject(cmd_arg[2]))
     elif in_command == 'delete' and subjects:
-        delete(subjects, cmd_arg[1])
+        if valid_subject((cmd_arg[1])):
+            delete(subjects, create_subject(cmd_arg[1]))
     elif in_command == 'save' and file_name:
         save(subjects, file_name)
     elif in_command == 'show' and subjects:
