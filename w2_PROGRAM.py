@@ -3,6 +3,9 @@ import re
 #--------------------------------------------------#
 
 class Subject():
+    """
+    Store code, name, weight and grade for subject
+    """
     def __init__(self, code, name, weight, grade):
         self.code = code
         self.name = name
@@ -16,12 +19,18 @@ class Subject():
 #--------------------------------------------------#
 
 def create_subject(in_subject):
+    """
+    Create subject from string
+    """
     subject = in_subject.split(',')
     return Subject(subject[0], subject[1], subject[2], subject[3])
 
 #--------------------------------------------------#
 
 def set_subjects(file_name):
+    """
+    Create list of all subjects
+    """
     try:
         file = open(file_name)
         lines = file.read().splitlines()
@@ -36,6 +45,9 @@ def set_subjects(file_name):
 #--------------------------------------------------#
 
 def have_subject(subjects, in_subject):
+    """
+    Check subject already in list
+    """
     for subject in subjects:
         if subject.code == in_subject.code:
             return True
@@ -46,17 +58,26 @@ def have_subject(subjects, in_subject):
 #--------------------------------------------------#
 
 def valid_subject(subject):
+    """
+    Check pattern of subject
+    """
     subject_pattern = re.compile(r'0\d{8},[A-Z](([A-Z]| ){1,28}[A-Z]|[A-Z]?),[1-3],([A-D][+]?|F)')
     return re.fullmatch(subject_pattern, subject)
 
 #--------------------------------------------------#
 
 def insert_subject(subjects, subject_new):
+    """
+    Insert subject to list
+    """
     subjects.append(subject_new)
 
 #--------------------------------------------------#
 
 def edit_subject(subjects, subject_old, subject_new):
+    """
+    Edit subject in list
+    """
     for i in range(len(subjects)):
         if subjects[i] == subject_old:
             subjects[i] = subject_new
@@ -65,6 +86,9 @@ def edit_subject(subjects, subject_old, subject_new):
 #--------------------------------------------------#
 
 def delete_subject(subjects, subject_old):
+    """
+    Delete subject from list
+    """
     for i in range(len(subjects)):
         if subjects[i] == subject_old:
             subjects.remove(subjects[i])
@@ -73,6 +97,9 @@ def delete_subject(subjects, subject_old):
 #--------------------------------------------------#
 
 def save_subjects(subjects, file_name):
+    """
+    Save all subjects
+    """
     file = open(file_name, 'w')
     for subject in subjects:
         file.write(f'{subject.code},{subject.name},{subject.weight},{subject.grade}\n')
@@ -81,18 +108,27 @@ def save_subjects(subjects, file_name):
 #--------------------------------------------------#
 
 def show_subjects(subjects):
+    """
+    Display all subjects
+    """
     for subject in subjects:
         print(subject.code + ', ' + subject.name + ', ' + subject.weight + ', ' + subject.grade)
 
 #--------------------------------------------------#
 
 def convert_grade(grade):
+    """
+    Convert grade from symbol to number
+    """
     grades = {'A': 4, 'B+' : 3.5, 'B': 3, 'C+': 2.5, 'C': 2, 'D+': 1.5, 'D': 1, 'F': 0}
     return grades[grade]
 
 #--------------------------------------------------#
 
 def calculate_GPA(subjects):
+    """
+    Calculate GPA from all subjects
+    """
     sum_weight, sum = 0, 0
     for subject in subjects:
         sum_weight += int(subject.weight)
@@ -102,11 +138,17 @@ def calculate_GPA(subjects):
 #--------------------------------------------------#
 
 def show_GPA(gpa):
+    """
+    Display GPA
+    """
     print(f'GPA = {gpa}')
 
 #--------------------------------------------------#
 
 def check_command(cmd_arg):
+    """
+    Check correct command
+    """
     if cmd_arg[0] == 'open' and len(cmd_arg) == 2:
         return 'open'
     elif cmd_arg[0] == 'insert' and len(cmd_arg) == 2:
@@ -127,6 +169,9 @@ def check_command(cmd_arg):
 #--------------------------------------------------#
 
 def split_input(cmd):
+    """
+    Seperate command
+    """
     cmd_arg = []
     quote = False
     cmd_arg.append('')
